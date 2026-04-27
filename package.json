@@ -1,0 +1,19 @@
+{
+  "name": "skanban",
+  "version": "1.0.0",
+  "description": "SKanban — Central Unificada de Atendimento Omnichannel (Máscara CVCRM)",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,91 @@
+/* ═══════════════════════════════════════════
+   SKanban — Materials & Background System
+   ═══════════════════════════════════════════ */
+
+.material-thin {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: saturate(200%) blur(40px);
+  -webkit-backdrop-filter: saturate(200%) blur(40px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.material-thick {
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: saturate(200%) blur(40px);
+  -webkit-backdrop-filter: saturate(200%) blur(40px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.hig-glass {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: saturate(180%) blur(30px);
+  -webkit-backdrop-filter: saturate(180%) blur(30px);
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: var(--shadow-md);
+}
+.hig-glass-elevated {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: saturate(180%) blur(40px);
+  -webkit-backdrop-filter: saturate(180%) blur(40px);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Background Blobs ── */
+.bg-blobs { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+.bg-blobs::before, .bg-blobs::after, .bg-blobs .blob-extra {
+  content:''; position:absolute; border-radius:50%; filter:blur(80px); opacity:0.35; will-change:transform;
+}
+.bg-blobs::before {
+  width:600px; height:600px;
+  background:radial-gradient(circle,rgba(0,113,227,0.25) 0%,transparent 70%);
+  top:-10%; right:-5%;
+  animation:blob-drift-cyan 25s ease-in-out infinite;
+}
+.bg-blobs::after {
+  width:500px; height:500px;
+  background:radial-gradient(circle,rgba(255,159,10,0.18) 0%,transparent 70%);
+  bottom:-8%; left:-3%;
+  animation:blob-drift-amber 35s ease-in-out infinite;
+}
+.bg-blobs .blob-extra {
+  width:450px; height:450px;
+  background:radial-gradient(circle,rgba(175,82,222,0.15) 0%,transparent 70%);
+  top:40%; left:30%;
+  animation:blob-drift-accent 30s ease-in-out infinite;
+}
+
+@keyframes blob-drift-cyan {
+  0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(120px,60px) scale(1.15)} 66%{transform:translate(30px,-30px) scale(.92)}
+}
+@keyframes blob-drift-amber {
+  0%,100%{transform:translate(0,0) scale(.95)} 33%{transform:translate(-140px,-60px) scale(1.12)} 66%{transform:translate(80px,100px) scale(1)}
+}
+@keyframes blob-drift-accent {
+  0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(200px,-80px) scale(1.08)} 70%{transform:translate(-20px,120px) scale(.9)}
+}
+
+.bg-grid {
+  background-image: linear-gradient(rgba(0,0,0,.015) 1px,transparent 1px), linear-gradient(90deg,rgba(0,0,0,.015) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+/* ── Animations ── */
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeInDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes slideInRight { from{opacity:0;transform:translateX(100%)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideInLeft { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+@keyframes scaleIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+.animate-fade-in { animation:fadeIn var(--duration-normal) var(--ease-premium) }
+.animate-fade-in-up { animation:fadeInUp var(--duration-slow) var(--ease-premium) }
+.animate-slide-right { animation:slideInRight var(--duration-slow) var(--ease-premium) }
+.animate-scale-in { animation:scaleIn var(--duration-normal) var(--ease-premium) }
+
+.stagger-1{animation-delay:.05s} .stagger-2{animation-delay:.1s} .stagger-3{animation-delay:.15s}
+.stagger-4{animation-delay:.2s} .stagger-5{animation-delay:.25s} .stagger-6{animation-delay:.3s}
+
+@media(prefers-reduced-motion:reduce){
+  .bg-blobs::before,.bg-blobs::after,.bg-blobs .blob-extra{animation:none!important}
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKanban — Central de Atendimento</title>
+  <meta name="description" content="Central Unificada de Atendimento Omnichannel — SKanban by SKR">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/materials.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/kanban.css">
+  <link rel="stylesheet" href="/css/modal.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+  <!-- ═══ Background Blobs ═══ -->
+  <div class="bg-blobs"><div class="blob-extra"></div></div>
+  <div class="bg-grid" style="position:fixed;inset:0;z-index:0;pointer-events:none"></div>
+
+  <!-- ═══ Login Screen ═══ -->
+  <div id="login-screen" class="login-screen" style="display:none">
+    <div class="login-card hig-glass-elevated">
+      <div style="text-align:center;margin-bottom:var(--sp-lg)">
+        <div style="font-family:var(--font-display);font-size:2.2rem;font-weight:800;letter-spacing:-0.03em">
+          S<span style="color:var(--skr-blue)">Kanban</span>
+        </div>
+      </div>
+      <h1>Bem-vindo</h1>
+      <p class="subtitle">Central de Atendimento Omnichannel</p>
+      <form id="login-form" autocomplete="off">
+        <div class="form-group">
+          <label class="hig-label">Usuário</label>
+          <input class="hig-input" type="text" id="login-usuario" placeholder="seu.usuario" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label class="hig-label">Senha</label>
+          <input class="hig-input" type="password" id="login-senha" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button type="submit" class="hig-btn hig-btn-primary" id="login-btn">Entrar</button>
+        <div id="login-error" class="login-error"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ App Shell ═══ -->
+  <div id="app-shell" class="app-layout" style="display:none">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar material-thick">
+      <div class="sidebar-logo">
+        <h1>S<span>Kanban</span></h1>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+
+        <button class="sidebar-link active" data-view="kanban">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Kanban
+          <span class="badge-count" id="sidebar-kanban-count">0</span>
+        </button>
+
+        <button class="sidebar-link" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          Dashboard
+        </button>
+
+        <div class="sidebar-section" style="margin-top:var(--sp-lg)">Ações</div>
+
+        <button class="sidebar-link" id="btn-new-atendimento">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Novo Atendimento
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <span class="avatar" id="sidebar-user-avatar">OP</span>
+          <div class="sidebar-user-info">
+            <div class="name" id="sidebar-user-name">Operador</div>
+            <div class="role" id="sidebar-user-role">Operador</div>
+          </div>
+          <button class="hig-btn-icon" id="btn-logout" title="Sair" style="color:var(--text-tertiary)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── Main Area ── -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="top-bar material-thin">
+        <div class="top-bar-left">
+          <h2 id="view-title">Kanban</h2>
+        </div>
+        <div class="top-bar-right">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="search-input" placeholder="Buscar protocolo, cliente...">
+          </div>
+          <button class="hig-btn hig-btn-primary hig-btn-sm" id="top-new-btn" onclick="Modal.openNewAtendimento()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo
+          </button>
+        </div>
+      </header>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar" id="filter-bar"></div>
+
+      <!-- ═══ Views ═══ -->
+
+      <!-- Kanban View -->
+      <section id="view-kanban" class="view-section active">
+        <div class="kanban-board" id="kanban-board"></div>
+      </section>
+
+      <!-- Dashboard View -->
+      <section id="view-dashboard" class="view-section">
+        <div id="dashboard-content"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ═══ Modal Overlay ═══ -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div id="modal-dialog" class="modal-dialog hig-glass-elevated"></div>
+  </div>
+
+  <!-- ═══ Drawer ═══ -->
+  <div id="drawer-overlay" class="drawer-overlay"></div>
+  <div id="drawer" class="drawer hig-glass-elevated">
+    <div class="drawer-header" id="drawer-header-content"></div>
+    <div class="drawer-tabs">
+      <button class="drawer-tab active" data-tab="detalhes">Detalhes</button>
+      <button class="drawer-tab" data-tab="timeline">Mensagens</button>
+      <button class="drawer-tab" data-tab="tarefas">Tarefas</button>
+    </div>
+    <div class="drawer-body">
+      <!-- Details Tab -->
+      <div id="drawer-detalhes" class="drawer-tab-content active"></div>
+      <!-- Timeline Tab -->
+      <div id="drawer-timeline" class="drawer-tab-content">
+        <div class="timeline-container">
+          <div class="timeline-messages" id="timeline-messages"></div>
+          <div class="timeline-input">
+            <textarea id="timeline-textarea" placeholder="Digite sua mensagem..." rows="1"></textarea>
+            <button class="hig-btn hig-btn-primary hig-btn-sm" id="timeline-send-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Tasks Tab -->
+      <div id="drawer-tarefas" class="drawer-tab-content"></div>
+    </div>
+  </div>
+
+  <!-- ═══ Scripts ═══ -->
+  <script src="/js/utils.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/modal.js"></script>
+  <script src="/js/timeline.js"></script>
+  <script src="/js/filters.js"></script>
+  <script src="/js/card.js"></script>
+  <script src="/js/kanban.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

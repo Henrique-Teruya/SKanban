@@ -1,0 +1,184 @@
+/* ═══════════════════════════════════════════
+   SKanban — Design Tokens (SKR Premium)
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* ── Brand Colors ── */
+  --skr-blue: #0071e3;
+  --skr-blue-hover: #0077ed;
+  --skr-blue-active: #006adb;
+  --skr-blue-10: rgba(0, 113, 227, 0.10);
+  --skr-blue-15: rgba(0, 113, 227, 0.15);
+  --skr-blue-20: rgba(0, 113, 227, 0.20);
+  --skr-black: #1d1d1f;
+  --skr-white: #fbfbfd;
+
+  /* ── Surface Colors ── */
+  --canvas: #ffffff;
+  --canvas-parchment: #f5f5f7;
+  --surface-raised: rgba(255, 255, 255, 0.85);
+
+  /* ── Text Colors ── */
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary: #aeaeb2;
+  --text-on-blue: #ffffff;
+  --text-on-dark: #f5f5f7;
+
+  /* ── Border / Divider ── */
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-medium: rgba(0, 0, 0, 0.10);
+  --border-strong: #e8e8ed;
+  --divider: rgba(0, 0, 0, 0.06);
+
+  /* ── Status Colors ── */
+  --status-novo: #0071e3;
+  --status-andamento: #34c759;
+  --status-aguardando: #ff9f0a;
+  --status-aguardando-int: #af52de;
+  --status-resolvido: #30d158;
+  --status-finalizado: #86868b;
+
+  /* ── Priority Colors ── */
+  --priority-baixa: #86868b;
+  --priority-media: #0071e3;
+  --priority-alta: #ff9f0a;
+  --priority-urgente: #ff3b30;
+
+  /* ── Channel Colors ── */
+  --channel-email: #5856d6;
+  --channel-whatsapp: #25d366;
+  --channel-portal: #0071e3;
+  --channel-interno: #86868b;
+  --channel-posvenda: #ff9f0a;
+  --channel-blip: #00b2ff;
+
+  /* ── Typography ── */
+  --font-display: 'Montserrat', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+
+  --fs-hero: clamp(2rem, 4vw, 3.5rem);
+  --fs-h1: clamp(1.5rem, 3vw, 2.5rem);
+  --fs-h2: clamp(1.25rem, 2vw, 1.75rem);
+  --fs-h3: 1.125rem;
+  --fs-body: 0.9375rem;
+  --fs-caption: 0.8125rem;
+  --fs-micro: 0.6875rem;
+
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extra: 800;
+
+  --tracking-tight: -0.03em;
+  --tracking-normal: -0.022em;
+  --tracking-button: -0.01em;
+
+  /* ── Radius ── */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 22px;
+  --radius-pill: 980px;
+  --radius-full: 9999px;
+
+  /* ── Spacing ── */
+  --sp-xxs: 4px;
+  --sp-xs: 8px;
+  --sp-sm: 12px;
+  --sp-md: 16px;
+  --sp-lg: 24px;
+  --sp-xl: 32px;
+  --sp-xxl: 48px;
+
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(0,0,0,0.02);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.03);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.04);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.04);
+  --shadow-blue: 0 4px 16px rgba(0,113,227,0.15), 0 0 0 0.5px rgba(0,113,227,0.3);
+  --shadow-drag: 0 20px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,113,227,0.2);
+
+  /* ── Transitions ── */
+  --ease-premium: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.4s;
+  --duration-reveal: 0.6s;
+
+  /* ── Layout ── */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 72px;
+  --header-height: 64px;
+  --kanban-header: 52px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  color: var(--text-primary);
+  background: var(--canvas);
+  line-height: 1.47;
+  letter-spacing: var(--tracking-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+  height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+  text-wrap: balance;
+  line-height: 1.1;
+}
+
+a { color: var(--skr-blue); text-decoration: none; }
+a:hover { opacity: 0.85; }
+
+img { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+
+::selection {
+  background: var(--skr-blue-15);
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(0, 113, 227, 0.5);
+  outline-offset: 2px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12);
+  border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.22); }
