@@ -48,12 +48,12 @@
   --priority-urgente: #ff3b30;
 
   /* ── Channel Colors ── */
-  --channel-email: #5856d6;
-  --channel-whatsapp: #25d366;
-  --channel-portal: #0071e3;
-  --channel-interno: #86868b;
-  --channel-posvenda: #ff9f0a;
-  --channel-blip: #00b2ff;
+  --channel-email: #E040FB;
+  --channel-whatsapp: #25D366;
+  --channel-portal: #0071E3;
+  --channel-interno: #607D8B;
+  --channel-posvenda: #FF9500;
+  --channel-blip: #00B2FF;
 
   /* ── Typography ── */
   --font-display: 'Montserrat', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;

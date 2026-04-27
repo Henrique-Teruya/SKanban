@@ -12,14 +12,16 @@ const Filters = {
     bar.innerHTML = `
       <button class="hig-pill active" data-filter="todos">Todos</button>
       <div style="width:1px;height:20px;background:var(--border-subtle)"></div>
-      <button class="hig-pill" data-filter="canal" data-value="Email">📧 Email</button>
-      <button class="hig-pill" data-filter="canal" data-value="WhatsApp">💬 WhatsApp</button>
-      <button class="hig-pill" data-filter="canal" data-value="Portal do Cliente">🌐 Portal</button>
-      <button class="hig-pill" data-filter="canal" data-value="Interno">🏢 Interno</button>
-      <button class="hig-pill" data-filter="canal" data-value="Pós-venda">🤝 Pós-venda</button>
+      <button class="hig-pill channel-email" data-filter="canal" data-value="Email">${Utils.channelIcon('Email')} Email</button>
+      <button class="hig-pill channel-whatsapp" data-filter="canal" data-value="WhatsApp">${Utils.channelIcon('WhatsApp')} WhatsApp</button>
+      <button class="hig-pill channel-portal" data-filter="canal" data-value="Portal do Cliente">${Utils.channelIcon('Portal do Cliente')} Portal</button>
+      <button class="hig-pill channel-interno" data-filter="canal" data-value="Interno">${Utils.channelIcon('Interno')} Interno</button>
+      <button class="hig-pill channel-posvenda" data-filter="canal" data-value="Pós-venda">${Utils.channelIcon('Pós-venda')} Pós-venda</button>
       <div style="width:1px;height:20px;background:var(--border-subtle)"></div>
-      <button class="hig-pill" data-filter="prioridade" data-value="urgente">🔴 Urgente</button>
-      <button class="hig-pill" data-filter="prioridade" data-value="alta">🟠 Alta</button>
+      <button class="hig-pill" data-filter="prioridade" data-value="urgente"><span class="priority-dot priority-urgente"></span> Urgente</button>
+      <button class="hig-pill" data-filter="prioridade" data-value="alta"><span class="priority-dot priority-alta"></span> Alta</button>
+      <button class="hig-pill" data-filter="prioridade" data-value="media"><span class="priority-dot priority-media"></span> Média</button>
+      <button class="hig-pill" data-filter="prioridade" data-value="baixa"><span class="priority-dot priority-baixa"></span> Baixa</button>
     `;
 
     bar.onclick = (e) => {

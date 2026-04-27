@@ -24,6 +24,26 @@
   cursor:pointer; border:none; background:none; width:100%; text-align:left;
 }
 .sidebar-link:hover { background:rgba(0,0,0,0.04); color:var(--text-primary); }
+.sidebar.hig-pill.active { background:var(--skr-blue); color:#fff; }
+.hig-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+.hig-pill.active:hover { filter:brightness(1.05); }
+
+/* Channel Identity for Pills (Always show icon color) */
+.hig-pill.channel-email svg { color: var(--channel-email); }
+.hig-pill.channel-whatsapp svg { color: var(--channel-whatsapp); }
+.hig-pill.channel-portal svg { color: var(--channel-portal); }
+.hig-pill.channel-interno svg { color: var(--channel-interno); }
+.hig-pill.channel-posvenda svg { color: var(--channel-posvenda); }
+.hig-pill.channel-blip svg { color: var(--channel-blip); }
+
+.hig-pill.channel-email.active { background: var(--channel-email); color: #fff; }
+.hig-pill.channel-whatsapp.active { background: var(--channel-whatsapp); color: #fff; }
+.hig-pill.channel-portal.active { background: var(--channel-portal); color: #fff; }
+.hig-pill.channel-interno.active { background: var(--channel-interno); color: #fff; }
+.hig-pill.channel-posvenda.active { background: var(--channel-posvenda); color: #fff; }
+.hig-pill.channel-blip.active { background: var(--channel-blip); color: #fff; }
+
+.hig-pill.active svg { color: #fff !important; }
 .sidebar-link.active { background:var(--skr-blue-10); color:var(--skr-blue); font-weight:var(--fw-semibold); }
 .sidebar-link svg { width:20px; height:20px; flex-shrink:0; }
 .sidebar-link .badge-count {
@@ -94,7 +114,7 @@
 }
 .kanban-column-title { display:flex; align-items:center; gap:var(--sp-xs); }
 .kanban-column-title .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-.kanban-column-title h3 { font-size:var(--fs-caption); font-weight:var(--fw-bold); }
+.kanban-column-title h3 { font-size: 1.4rem; font-weight:var(--fw-extra); letter-spacing: var(--tracking-tight); color: var(--text-primary); }
 .kanban-column-count {
   font-size:11px; font-weight:var(--fw-bold); color:var(--text-tertiary);
   background:rgba(0,0,0,0.05); padding:2px 8px; border-radius:var(--radius-pill);
@@ -103,7 +123,10 @@
 .kanban-cards {
   flex:1; display:flex; flex-direction:column; gap:var(--sp-xs);
   padding:0 var(--sp-xs) var(--sp-xs); overflow-y:auto; min-height:60px;
+  scrollbar-width: none; /* Hide for Firefox */
+  -ms-overflow-style: none; /* Hide for IE/Edge */
 }
+.kanban-cards::-webkit-scrollbar { display: none; } /* Hide for Chrome/Safari */
 
 /* ── Kanban Card ── */
 .kanban-card {
@@ -113,6 +136,7 @@
   box-shadow:var(--shadow-xs); position:relative;
   animation:fadeInUp var(--duration-normal) var(--ease-premium) both;
 }
+
 .kanban-card:hover {
   box-shadow:var(--shadow-sm); transform:translateY(-1px);
   border-color:var(--border-medium);
@@ -127,12 +151,19 @@
   box-shadow:none; min-height:100px;
 }
 
-.card-header { display:flex; align-items:flex-start; justify-content:space-between; gap:var(--sp-xs); margin-bottom:var(--sp-xs); }
-.card-protocol { font-size:var(--fs-micro); font-weight:var(--fw-semibold); color:var(--text-tertiary); }
-.card-title { font-size:var(--fs-caption); font-weight:var(--fw-semibold); color:var(--text-primary);
-  line-height:1.35; margin-bottom:var(--sp-xs); display:-webkit-box; -webkit-line-clamp:2;
-  -webkit-box-orient:vertical; overflow:hidden; }
-.card-client { font-size:var(--fs-micro); color:var(--text-secondary); margin-bottom:var(--sp-sm); }
+.card-header { display:flex; align-items:center; justify-content:space-between; gap:var(--sp-xs); margin-bottom:4px; }
+.card-title { font-size: 1.15rem; font-weight:var(--fw-extra); color:var(--text-primary);
+  line-height:1.1; margin-bottom:0; display:-webkit-box; -webkit-line-clamp:1;
+  flex:1; margin-right:var(--sp-xs);
+  -webkit-box-orient:vertical; overflow:hidden; transition: color var(--duration-fast) var(--ease-premium); }
+
+.channel-email .card-title { color: var(--channel-email); }
+.channel-whatsapp .card-title { color: var(--channel-whatsapp); }
+.channel-portal .card-title { color: var(--channel-portal); }
+.channel-interno .card-title { color: var(--channel-interno); }
+.channel-posvenda .card-title { color: var(--channel-posvenda); }
+.channel-blip .card-title { color: var(--channel-blip); }
+.card-subtitle { font-size:var(--fs-micro); font-weight:var(--fw-medium); color:var(--text-secondary); margin-bottom:var(--sp-sm); }
 
 .card-meta { display:flex; align-items:center; justify-content:space-between; gap:var(--sp-xs); }
 .card-meta-left { display:flex; align-items:center; gap:var(--sp-xs); }

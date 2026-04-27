@@ -76,17 +76,23 @@
 .hig-badge-red { background:rgba(255,59,48,0.12); color:#ff3b30; }
 .hig-badge-gray { background:rgba(134,134,139,0.12); color:#86868b; }
 
-/* ── Channel Badges ── */
-.channel-badge { font-size:10px; font-weight:var(--fw-bold); padding:2px 8px;
-  border-radius:var(--radius-xs); text-transform:uppercase; letter-spacing:0.02em; }
-.channel-email { background:rgba(88,86,214,0.12); color:var(--channel-email); }
-.channel-whatsapp { background:rgba(37,211,102,0.12); color:#1a9e4a; }
-.channel-portal { background:var(--skr-blue-10); color:var(--skr-blue); }
-.channel-interno { background:rgba(134,134,139,0.12); color:var(--channel-interno); }
-.channel-posvenda { background:rgba(255,159,10,0.12); color:var(--channel-posvenda); }
+/* ── Channel Icons ── */
+.channel-icon { 
+  width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+  border-radius:50%; padding:5px; position: relative;
+}
+.channel-icon svg { width:100%; height:100%; stroke-width:2.5; position: relative; z-index: 2; }
+
+.channel-email { background:rgba(224,64,251,0.12); color:var(--channel-email); }
+.channel-whatsapp { background:rgba(37,211,102,0.12); color:var(--channel-whatsapp); }
+.channel-portal { background:rgba(0,113,227,0.12); color:var(--channel-portal); }
+.channel-interno { background:rgba(96,125,139,0.12); color:var(--channel-interno); }
+.channel-posvenda { background:rgba(255,149,0,0.12); color:var(--channel-posvenda); }
 .channel-blip { background:rgba(0,178,255,0.12); color:var(--channel-blip); }
 
 /* ── Priority Dots ── */
+.card-header { display:flex; align-items:center; justify-content:space-between; gap:var(--sp-xs); margin-bottom:4px; }
+.card-header .priority-dot { margin-right: 2px; }
 .priority-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 .priority-baixa { background:var(--priority-baixa); }
 .priority-media { background:var(--priority-media); }
@@ -95,7 +101,7 @@
 
 /* ── Pills ── */
 .hig-pill {
-  display:inline-flex; align-items:center; gap:6px;
+  display:inline-flex; align-items:center; gap:8px;
   font-size:var(--fs-micro); font-weight:var(--fw-semibold);
   padding:6px 14px; border-radius:var(--radius-pill);
   background:rgba(0,0,0,0.04); color:var(--text-primary);
@@ -104,6 +110,7 @@
 }
 .hig-pill:hover { background:rgba(0,0,0,0.07); }
 .hig-pill.active { background:var(--skr-blue); color:#fff; }
+.hig-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
 .hig-pill.active:hover { filter:brightness(1.05); }
 
 /* ── Avatar ── */
@@ -117,10 +124,7 @@
 
 /* ── SLA Bar ── */
 .sla-bar { width:100%; height:3px; background:rgba(0,0,0,0.06); border-radius:2px; overflow:hidden; }
-.sla-bar-fill { height:100%; border-radius:2px; transition:width var(--duration-slow) var(--ease-premium); }
-.sla-ok .sla-bar-fill { background:var(--status-andamento); }
-.sla-warning .sla-bar-fill { background:var(--status-aguardando); }
-.sla-violated .sla-bar-fill { background:var(--priority-urgente); }
+.sla-bar-fill { height:100%; transition:width var(--duration-slow) var(--ease-premium); background: #86868b; }
 
 /* ── Divider ── */
 .hig-divider { height:0.5px; background:linear-gradient(90deg,transparent,var(--border-subtle),transparent); margin:var(--sp-md) 0; }

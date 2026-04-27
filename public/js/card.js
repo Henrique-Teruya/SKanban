@@ -9,30 +9,26 @@ const Card = {
     const avatarBg = Utils.avatarColor(at.responsavel.nome);
 
     const card = document.createElement('div');
-    card.className = 'kanban-card';
+    card.className = `kanban-card priority-${at.prioridade} ${Utils.channelClass(at.canal)}`;
     card.draggable = true;
     card.dataset.id = at.id;
     card.dataset.situacaoId = at.situacao.id;
 
     card.innerHTML = `
       <div class="card-header">
-        <span class="card-protocol">${Utils.escapeHtml(at.protocolo)}</span>
-        <span class="channel-badge ${Utils.channelClass(at.canal)}">${Utils.escapeHtml(at.canal)}</span>
+        <span class="priority-dot ${Utils.priorityClass(at.prioridade)}" title="Prioridade: ${at.prioridade}"></span>
+        <div class="card-title">${Utils.escapeHtml(at.cliente.nome)}</div>
+        <span class="channel-icon ${Utils.channelClass(at.canal)}" title="${Utils.escapeHtml(at.canal)}">
+          ${Utils.channelIcon(at.canal)}
+        </span>
       </div>
-      <div class="card-title">${Utils.escapeHtml(at.titulo)}</div>
-      <div class="card-client">${Utils.escapeHtml(at.cliente.nome)}</div>
+      <div class="card-subtitle">${Utils.escapeHtml(at.assunto.nome)}</div>
       <div class="card-meta">
-        <div class="card-meta-left">
-          <span class="priority-dot ${Utils.priorityClass(at.prioridade)}" title="${at.prioridade}"></span>
-          <span class="avatar avatar-sm" style="background:${avatarBg}" title="${Utils.escapeHtml(at.responsavel.nome)}">${Utils.getInitials(at.responsavel.nome)}</span>
-        </div>
-        <div class="card-meta-right">
-          ${at.totalMensagens > 0 ? `<span class="card-time" title="Mensagens">💬 ${at.totalMensagens}</span>` : ''}
-          ${at.tarefasPendentes > 0 ? `<span class="card-time" title="Tarefas pendentes">☑ ${at.tarefasPendentes}</span>` : ''}
+        <div class="card-meta-right" style="margin-left:0; width:100%; justify-content:flex-end">
           <span class="card-time">${Utils.timeAgo(at.atualizadoEm)}</span>
         </div>
       </div>
-      <div class="card-footer ${slaStatus}">
+      <div class="card-footer">
         <div class="sla-bar"><div class="sla-bar-fill" style="width:${slaPct}%"></div></div>
       </div>
     `;

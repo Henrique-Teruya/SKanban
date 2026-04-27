@@ -31,7 +31,6 @@ const Kanban = {
       col.innerHTML = `
         <div class="kanban-column-header">
           <div class="kanban-column-title">
-            <span class="dot" style="background:${sit.cor}"></span>
             <h3>${Utils.escapeHtml(sit.nome)}</h3>
           </div>
           <span class="kanban-column-count" data-count-for="${sit.id}">0</span>
