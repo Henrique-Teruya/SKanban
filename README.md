@@ -1,12 +1,3 @@
-**Descrição (até 350 caracteres)**
-
-SKanban é uma máscara operacional para o módulo de Atendimentos do CVCRM, criada para centralizar e organizar chamados de e-mail, WhatsApp via Blip, Portal do Cliente, pós-venda e suporte interno em uma única interface Kanban, com foco em UX, produtividade, SLA e gestão omnichannel baseada em APIs reais.
-
----
-
-# README.md
-
-````md
 # SKanban
 
 SKanban é uma máscara operacional para o módulo de Atendimentos do CVCRM, desenvolvida para centralizar toda a operação de suporte e relacionamento em uma única interface moderna, amigável e altamente produtiva.
