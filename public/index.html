@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="/css/kanban.css">
   <link rel="stylesheet" href="/css/modal.css">
   <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/omnichannel.css">
 </head>
 <body>
 
@@ -72,13 +73,12 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
           Dashboard
         </button>
-
-        <div class="sidebar-section" style="margin-top:var(--sp-lg)">Ações</div>
-
-        <button class="sidebar-link" id="btn-new-atendimento">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-          Novo Atendimento
+ 
+        <button class="sidebar-link" data-view="conversas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Conversas
         </button>
+
       </nav>
 
       <div class="sidebar-footer">
@@ -128,6 +128,58 @@
       <section id="view-dashboard" class="view-section">
         <div id="dashboard-content"></div>
       </section>
+ 
+      <!-- Conversas View -->
+      <section id="view-conversas" class="view-section">
+        <div class="conversas-layout">
+          <aside class="conversas-list-sidebar">
+            <div class="conversas-list-header">
+              <h3>Atendimentos</h3>
+              <span class="badge" id="conversas-total-badge">0</span>
+            </div>
+            <div class="conversas-list" id="conversas-list-container">
+              <!-- Cards rendered here -->
+            </div>
+          </aside>
+          <div class="conversas-main">
+            <div id="conversas-timeline-placeholder" class="empty-state">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom: var(--sp-md); opacity: 0.2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <p>Selecione um atendimento para visualizar a conversa</p>
+            </div>
+            <div id="conversas-timeline-container" style="display: none; flex: 1; flex-direction: column; min-height: 0;">
+               <div id="conversas-main-header" class="conversas-main-header">
+                 <!-- Populated via JS -->
+               </div>
+               <!-- Shared Timeline Structure -->
+               <div class="timeline-container">
+                 <div class="timeline-messages" id="conversas-messages"></div>
+                 <div class="timeline-input-area">
+                   <div class="timeline-input-toolbar">
+                     <button class="hig-btn-icon hig-btn-sm" title="Anexar arquivo" onclick="document.getElementById('conversas-file-upload').click()">
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                     </button>
+                     <input type="file" id="conversas-file-upload" style="display:none" multiple>
+                     <select class="hig-select hig-select-sm" id="conversas-quick-action" style="max-width: 150px; margin-left: auto;">
+                       <option value="">Ações rápidas...</option>
+                       <option value="status">Alterar Situação</option>
+                       <option value="finalizar">Finalizar Chamado</option>
+                     </select>
+                   </div>
+                   <div class="timeline-input-wrapper">
+                     <textarea id="conversas-textarea" placeholder="Responda ou adicione uma nota..." rows="1"></textarea>
+                     <button class="hig-btn hig-btn-primary hig-btn-sm" id="conversas-send-btn">
+                       Enviar
+                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:6px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                     </button>
+                   </div>
+                 </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -139,29 +191,46 @@
   <!-- ═══ Drawer ═══ -->
   <div id="drawer-overlay" class="drawer-overlay"></div>
   <div id="drawer" class="drawer hig-glass-elevated">
-    <div class="drawer-header" id="drawer-header-content"></div>
+    <div class="drawer-header-wrapper" id="drawer-header-content"></div>
     <div class="drawer-tabs">
-      <button class="drawer-tab active" data-tab="detalhes">Detalhes</button>
-      <button class="drawer-tab" data-tab="timeline">Mensagens</button>
+      <button class="drawer-tab active" data-tab="timeline">Conversa</button>
+      <button class="drawer-tab" data-tab="detalhes">Detalhes</button>
       <button class="drawer-tab" data-tab="tarefas">Tarefas</button>
+      <button class="drawer-tab" data-tab="interacoes">Logs</button>
     </div>
     <div class="drawer-body">
-      <!-- Details Tab -->
-      <div id="drawer-detalhes" class="drawer-tab-content active"></div>
       <!-- Timeline Tab -->
-      <div id="drawer-timeline" class="drawer-tab-content">
+      <div id="drawer-timeline" class="drawer-tab-content active">
         <div class="timeline-container">
           <div class="timeline-messages" id="timeline-messages"></div>
-          <div class="timeline-input">
-            <textarea id="timeline-textarea" placeholder="Digite sua mensagem..." rows="1"></textarea>
-            <button class="hig-btn hig-btn-primary hig-btn-sm" id="timeline-send-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            </button>
+          <div class="timeline-input-area">
+            <div class="timeline-input-toolbar">
+              <button class="hig-btn-icon hig-btn-sm" title="Anexar arquivo" id="btn-attach" onclick="document.getElementById('timeline-file-upload').click()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+              </button>
+              <input type="file" id="timeline-file-upload" style="display:none" multiple>
+              <select class="hig-select hig-select-sm" id="timeline-quick-action" style="max-width: 150px; margin-left: auto;">
+                <option value="">Ações rápidas...</option>
+                <option value="status">Alterar Situação</option>
+                <option value="finalizar">Finalizar Chamado</option>
+              </select>
+            </div>
+            <div class="timeline-input-wrapper">
+              <textarea id="timeline-textarea" placeholder="Responda ou adicione uma nota..." rows="1"></textarea>
+              <button class="hig-btn hig-btn-primary hig-btn-sm" id="timeline-send-btn">
+                Enviar
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:6px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
+      <!-- Details Tab -->
+      <div id="drawer-detalhes" class="drawer-tab-content"></div>
       <!-- Tasks Tab -->
       <div id="drawer-tarefas" class="drawer-tab-content"></div>
+      <!-- Logs Tab -->
+      <div id="drawer-interacoes" class="drawer-tab-content"></div>
     </div>
   </div>
 
@@ -173,6 +242,7 @@
   <script src="/js/timeline.js"></script>
   <script src="/js/filters.js"></script>
   <script src="/js/card.js"></script>
+  <script src="/js/conversas.js"></script>
   <script src="/js/kanban.js"></script>
   <script src="/js/dashboard.js"></script>
   <script src="/js/app.js"></script>

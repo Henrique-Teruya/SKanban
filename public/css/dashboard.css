@@ -2,7 +2,7 @@
    SKanban — Dashboard
    ═══════════════════════════════════════════ */
 
-.dashboard-view { padding:var(--sp-lg); overflow-y:auto; flex:1; }
+.dashboard-view { padding:var(--sp-lg); flex:1; }
 .dashboard-header { margin-bottom:var(--sp-lg); }
 .dashboard-header h2 { font-size:var(--fs-h2); margin-bottom:var(--sp-xxs); }
 .dashboard-header p { color:var(--text-secondary); font-size:var(--fs-caption); }

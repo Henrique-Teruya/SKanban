@@ -122,6 +122,7 @@ function generateAtendimentos(count) {
         horasDecorridas: randomInt(1, 96),
       },
       totalMensagens: randomInt(1, 15),
+      novasMensagens: randomInt(0, 3),
       totalTarefas: randomInt(0, 5),
       tarefasPendentes: randomInt(0, 3),
     });
@@ -134,38 +135,115 @@ let mockAtendimentos = generateAtendimentos(42);
 function generateMensagens(atendimentoId) {
   const at = mockAtendimentos.find(a => a.id === atendimentoId);
   if (!at) return [];
-  const count = at.totalMensagens;
+  const count = Math.max(at.totalMensagens, 3);
   const msgs = [];
-  const remetentes = [
-    { tipo: 'cliente', nome: at.cliente.nome },
-    { tipo: 'operador', nome: at.responsavel.nome },
-    { tipo: 'sistema', nome: 'Sistema' },
+
+  const textosCliente = [
+    'Oi, vi que meu boleto vence amanhã e ainda não recebi por e-mail.',
+    'A manutenção ficou de vir hoje de manhã e não apareceu. Alguma previsão?',
+    'Mandei os documentos da escritura em anexo. Podem conferir?',
+    'Gostaria de agendar a entrega das chaves para a próxima sexta, é possível?',
+    'Não estou conseguindo acessar o portal do cliente, dá erro de senha.',
+    'Preciso de uma cópia do meu contrato assinado.',
+    'Obrigado pela rapidez no atendimento!',
+    'Qual o prazo para a vistoria da unidade 402?',
+    'A infiltração na garagem está aumentando, preciso de alguém aqui urgente.',
+    'Confirmando o pagamento da parcela de entrada. Segue comprovante.'
+  ];
+  const textosOperador = [
+    'Bom dia! Verificamos seu pedido e o técnico já está a caminho.',
+    'Recebemos seus documentos. O setor jurídico fará a análise em até 48h.',
+    'Lamentamos o atraso. Houve um imprevisto na obra, mas o técnico irá hoje à tarde.',
+    'Acabei de reenviar o boleto para o seu e-mail cadastrado. Confira a caixa de spam.',
+    'Sua solicitação de vistoria foi agendada com sucesso para o dia 15/05 às 14h.',
+    'Para resetar sua senha, clique em "Esqueci minha senha" na tela de login do portal.',
+    'Estamos verificando com o setor financeiro e já te damos um retorno.',
+    'Poderia nos enviar uma foto do ocorrido para agilizarmos o laudo?',
+    'Sua unidade já está pronta para a vistoria final. Parabéns!',
+    'Vou encaminhar sua nota interna para o gerente de obras.'
+  ];
+  const textosSistema = [
+    `Situação alterada para "${at.situacao.nome}"`,
+    `Atendimento atribuído para ${at.responsavel.nome}`,
+    `Prioridade alterada para ${at.prioridade}`,
+    `O cliente visualizou a mensagem`,
+    `Arquivo anexado pelo sistema`,
+    `SLA de resposta atingido (24h)`
+  ];
+  const nomeAnexos = [
+    { nome: 'contrato_v2.pdf', tipo: 'pdf' },
+    { nome: 'comprovante_pagamento.pdf', tipo: 'pdf' },
+    { nome: 'foto_ocorrencia.jpg', tipo: 'imagem' },
+    { nome: 'planta_baixa.dwg', tipo: 'documento' },
+    { nome: 'laudo_tecnico.pdf', tipo: 'pdf' },
+    { nome: 'foto_vistoria_01.png', tipo: 'imagem' },
   ];
 
   for (let i = 0; i < count; i++) {
-    const rem = i === 0 ? remetentes[0] : randomFrom(remetentes);
-    const textos = [
-      'Olá, gostaria de informações sobre meu atendimento.',
-      'Bom dia! Estamos analisando sua solicitação.',
-      'Já realizamos o encaminhamento para o setor responsável.',
-      'Obrigado pela informação. Aguardo retorno.',
-      'Segue em anexo o documento solicitado.',
-      'Prezado(a), informamos que o prazo foi atualizado.',
-      'Houve alguma atualização sobre o meu chamado?',
-      'Estamos verificando junto à equipe técnica.',
-      'O serviço foi agendado para a próxima semana.',
-      'Perfeito, muito obrigado pelo atendimento!',
-    ];
-    msgs.push({
-      id: atendimentoId * 100 + i,
-      atendimentoId,
-      remetente: rem,
-      texto: randomFrom(textos),
-      criadoEm: new Date(Date.now() - (count - i) * 3600000 * randomInt(1, 8)).toISOString(),
-      anexos: Math.random() > 0.8 ? [{ nome: 'documento.pdf', url: '#' }] : [],
-    });
+    const baseTime = Date.now() - (count - i) * 3600000 * randomInt(1, 6);
+    const criadoEm = new Date(baseTime).toISOString();
+
+    // First message is always from client
+    if (i === 0) {
+      msgs.push({ id: atendimentoId * 100 + i, atendimentoId, tipo: 'mensagem',
+        remetente: { tipo: 'cliente', nome: at.cliente.nome },
+        texto: randomFrom(textosCliente), criadoEm, anexos: [] });
+      continue;
+    }
+
+    // Mix message types
+    const roll = Math.random();
+    if (roll < 0.15 && i > 1) {
+      // System event
+      msgs.push({ id: atendimentoId * 100 + i, atendimentoId, tipo: 'sistema',
+        remetente: { tipo: 'sistema', nome: 'Sistema' },
+        texto: randomFrom(textosSistema), criadoEm, anexos: [] });
+    } else if (roll < 0.25 && i > 2) {
+      // Internal note
+      msgs.push({ id: atendimentoId * 100 + i, atendimentoId, tipo: 'nota_interna',
+        remetente: { tipo: 'operador', nome: at.responsavel.nome },
+        texto: 'Nota interna: Verificar com o jurídico antes de prosseguir.', criadoEm, anexos: [] });
+    } else if (i % 2 === 1) {
+      // Operator response
+      const anexos = Math.random() > 0.75 ? [randomFrom(nomeAnexos)] : [];
+      msgs.push({ id: atendimentoId * 100 + i, atendimentoId, tipo: 'mensagem',
+        remetente: { tipo: 'operador', nome: at.responsavel.nome },
+        texto: randomFrom(textosOperador), criadoEm, anexos });
+    } else {
+      // Client message
+      const anexos = Math.random() > 0.85 ? [randomFrom(nomeAnexos)] : [];
+      msgs.push({ id: atendimentoId * 100 + i, atendimentoId, tipo: 'mensagem',
+        remetente: { tipo: 'cliente', nome: at.cliente.nome },
+        texto: randomFrom(textosCliente), criadoEm, anexos });
+    }
   }
   return msgs;
+}
+
+function generateInteracoes(atendimentoId) {
+  const at = mockAtendimentos.find(a => a.id === atendimentoId);
+  if (!at) return [];
+  const interacoes = [];
+  const acoes = [
+    { tipo: 'criacao', descricao: 'Atendimento criado', autor: 'Sistema' },
+    { tipo: 'situacao', descricao: `Situação alterada para "${at.situacao.nome}"`, autor: at.responsavel.nome },
+    { tipo: 'atribuicao', descricao: `Atendimento atribuído para ${at.responsavel.nome}`, autor: 'Sistema' },
+    { tipo: 'mensagem', descricao: `${at.responsavel.nome} enviou uma mensagem`, autor: at.responsavel.nome },
+    { tipo: 'prioridade', descricao: `Prioridade alterada para ${at.prioridade}`, autor: at.responsavel.nome },
+  ];
+  const count = randomInt(3, 8);
+  for (let i = 0; i < count; i++) {
+    const acao = i === 0 ? acoes[0] : randomFrom(acoes);
+    interacoes.push({
+      id: atendimentoId * 50 + i,
+      atendimentoId,
+      tipo: acao.tipo,
+      descricao: acao.descricao,
+      autor: acao.autor,
+      criadoEm: new Date(Date.now() - (count - i) * 3600000 * randomInt(2, 12)).toISOString(),
+    });
+  }
+  return interacoes;
 }
 
 function generateTarefas(atendimentoId) {
@@ -321,6 +399,37 @@ app.post('/api/atendimentos/:id/mensagens', (req, res) => {
       texto: req.body.texto,
       criadoEm: new Date().toISOString(),
       anexos: [],
+    });
+  }
+  res.status(501).json({ erro: 'API real não configurada' });
+});
+
+// ── Responder (Portal do Cliente) ──
+app.post('/api/atendimentos/:id/responder', (req, res) => {
+  if (USE_MOCK) {
+    const at = mockAtendimentos.find(a => a.id === +req.params.id);
+    if (at) at.totalMensagens++;
+    return res.status(201).json({
+      id: Date.now(), atendimentoId: +req.params.id, tipo: 'mensagem',
+      remetente: { tipo: 'operador', nome: 'Operador SKanban' },
+      texto: req.body.texto, criadoEm: new Date().toISOString(), anexos: [],
+    });
+  }
+  res.status(501).json({ erro: 'API real não configurada' });
+});
+
+// ── Interações / Logs ──
+app.get('/api/atendimentos/:id/interacoes', (req, res) => {
+  if (USE_MOCK) return res.json(generateInteracoes(+req.params.id));
+  res.status(501).json({ erro: 'API real não configurada' });
+});
+
+// ── Upload de Arquivos ──
+app.post('/api/atendimentos/:id/upload', (req, res) => {
+  if (USE_MOCK) {
+    return res.status(201).json({
+      id: Date.now(), nome: req.body.nome || 'arquivo.pdf',
+      tipo: req.body.tipo || 'pdf', url: '#', criadoEm: new Date().toISOString(),
     });
   }
   res.status(501).json({ erro: 'API real não configurada' });

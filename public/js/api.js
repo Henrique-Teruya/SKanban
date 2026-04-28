@@ -69,5 +69,14 @@ const API = {
 
   getDashboardStats() { return this.get('/api/dashboard/stats'); },
 
+  getInteracoes(id) { return this.get(`/api/atendimentos/${id}/interacoes`); },
+  responderAtendimento(id, texto) { return this.post(`/api/atendimentos/${id}/responder`, { texto }); },
+  uploadArquivo(id, formData) {
+    const token = this.getToken();
+    return fetch(`${this.baseURL}/api/atendimentos/${id}/upload`, {
+      method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData,
+    }).then(r => r.json());
+  },
+
   avaliar(id, nota) { return this.post(`/api/atendimentos/${id}/avaliar`, { nota }); },
 };

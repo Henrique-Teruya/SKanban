@@ -101,5 +101,35 @@ const Utils = {
     });
     children.forEach(c => { if (typeof c === 'string') el.append(c); else if (c) el.appendChild(c); });
     return el;
+  },
+
+  isToday(dateStr) {
+    const d = new Date(dateStr);
+    const now = new Date();
+    return d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  },
+
+  isYesterday(dateStr) {
+    const d = new Date(dateStr);
+    const y = new Date();
+    y.setDate(y.getDate() - 1);
+    return d.getDate() === y.getDate() && d.getMonth() === y.getMonth() && d.getFullYear() === y.getFullYear();
+  },
+
+  formatDateSeparator(dateStr) {
+    if (this.isToday(dateStr)) return 'Hoje';
+    if (this.isYesterday(dateStr)) return 'Ontem';
+    return new Date(dateStr).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  },
+
+  fileIcon(nome) {
+    const ext = (nome || '').split('.').pop().toLowerCase();
+    const icons = {
+      pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+      jpg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+      png: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+      doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    };
+    return icons[ext] || icons.doc;
   }
 };

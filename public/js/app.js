@@ -17,8 +17,12 @@ const App = {
   async init() {
     this.renderSidebar();
     this.setupSearch();
-    Filters.render();
+    await Filters.render();
+    this.updateBadges();
     this.navigate('kanban');
+
+    // Auto update badges every 30s
+    setInterval(() => this.updateBadges(), 30000);
   },
 
   showLogin() {
@@ -63,6 +67,28 @@ const App = {
       if (this.currentView === 'kanban') Kanban.refresh();
     }, 400);
   },
+ 
+  async updateBadges() {
+    try {
+      const atendimentos = await API.getAtendimentos();
+      
+      // Kanban: Novos Atendimentos (ID 1)
+      const novos = atendimentos.filter(a => a.situacao.id === 1).length;
+      const kanbanBadge = Utils.$('#kanban-badge');
+      if (kanbanBadge) {
+        kanbanBadge.textContent = novos;
+        kanbanBadge.style.display = novos > 0 ? 'block' : 'none';
+      }
+ 
+      // Conversas: Novas Mensagens
+      const novasMsgs = atendimentos.reduce((acc, a) => acc + (a.novasMensagens || 0), 0);
+      const conversasBadge = Utils.$('#conversas-badge');
+      if (conversasBadge) {
+        conversasBadge.textContent = novasMsgs;
+        conversasBadge.style.display = novasMsgs > 0 ? 'block' : 'none';
+      }
+    } catch (err) { console.error('Erro ao atualizar badges:', err); }
+  },
 
   async navigate(view) {
     this.currentView = view;
@@ -73,7 +99,7 @@ const App = {
     if (activeLink) activeLink.classList.add('active');
 
     // Update top bar title
-    const titles = { kanban: 'Kanban', dashboard: 'Dashboard' };
+    const titles = { kanban: 'Kanban', dashboard: 'Dashboard', conversas: 'Conversas' };
     const titleEl = Utils.$('#view-title');
     if (titleEl) titleEl.textContent = titles[view] || 'SKanban';
 
@@ -83,11 +109,18 @@ const App = {
     if (view === 'kanban') {
       Utils.$('#view-kanban').classList.add('active');
       Utils.$('#filter-bar').style.display = 'flex';
+      Utils.$('.top-bar-right').style.display = 'flex';
       await Kanban.init();
     } else if (view === 'dashboard') {
       Utils.$('#view-dashboard').classList.add('active');
       Utils.$('#filter-bar').style.display = 'none';
+      Utils.$('.top-bar-right').style.display = 'none';
       await Dashboard.render();
+    } else if (view === 'conversas') {
+      Utils.$('#view-conversas').classList.add('active');
+      Utils.$('#filter-bar').style.display = 'none';
+      Utils.$('.top-bar-right').style.display = 'none';
+      await Conversas.init();
     }
   }
 };

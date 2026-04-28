@@ -40,7 +40,7 @@
 
 .drawer {
   position:fixed; top:0; right:0; bottom:0; z-index:510;
-  width:520px; max-width:90vw; display:flex; flex-direction:column;
+  width:680px; max-width:90vw; display:flex; flex-direction:column;
   border-left:1px solid var(--border-subtle);
   transform:translateX(100%);
   transition:transform var(--duration-slow) var(--ease-premium);

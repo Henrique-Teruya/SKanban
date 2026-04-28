@@ -36,6 +36,13 @@ const Modal = {
     document.addEventListener('keydown', this._escDrawer);
   },
 
+  async openDrawerById(id) {
+    try {
+      const at = await API.getAtendimento(id);
+      this.openDrawer(at);
+    } catch (err) { alert('Erro ao carregar detalhes: ' + err.message); }
+  },
+
   closeDrawer() {
     const drawer = Utils.$('#drawer');
     drawer.classList.remove('open');
@@ -47,14 +54,43 @@ const Modal = {
 
   _renderDrawerContent(at) {
     const header = Utils.$('#drawer-header-content');
+    const avatarBg = Utils.avatarColor(at.responsavel.nome);
+    const channelClass = Utils.channelClass(at.canal);
+
     header.innerHTML = `
-      <div>
-        <div class="protocol">${Utils.escapeHtml(at.protocolo)}</div>
-        <h2>${Utils.escapeHtml(at.titulo)}</h2>
+      <div class="drawer-header-crm">
+        <div class="crm-top">
+          <div class="protocol">${Utils.escapeHtml(at.protocolo)}</div>
+          <button class="hig-btn-icon hig-btn-secondary" onclick="Modal.closeDrawer()" style="margin-left: auto;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="crm-main">
+          <h2>${Utils.escapeHtml(at.titulo)}</h2>
+          <div class="crm-client-strip">
+            <span class="client-name">${Utils.escapeHtml(at.cliente.nome)}</span>
+            <span class="dot-sep"></span>
+            <span class="channel-label ${channelClass}">${at.canal}</span>
+          </div>
+        </div>
+        <div class="crm-meta-grid">
+           <div class="meta-item">
+             <label>Responsável</label>
+             <div class="val">
+               <span class="avatar-xs" style="background:${avatarBg}">${Utils.getInitials(at.responsavel.nome)}</span>
+               ${Utils.escapeHtml(at.responsavel.nome)}
+             </div>
+           </div>
+           <div class="meta-item">
+             <label>Prioridade</label>
+             <div class="val"><span class="priority-dot ${Utils.priorityClass(at.prioridade)}"></span>${at.prioridade}</div>
+           </div>
+           <div class="meta-item">
+             <label>SLA</label>
+             <div class="val">${at.sla.horasDecorridas}h / ${at.sla.prazo}h</div>
+           </div>
+        </div>
       </div>
-      <button class="hig-btn-icon hig-btn-secondary" onclick="Modal.closeDrawer()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
     `;
 
     // Tabs
@@ -65,16 +101,24 @@ const Modal = {
         tabs.forEach(t => t.classList.remove('active'));
         contents.forEach(c => c.classList.remove('active'));
         tab.classList.add('active');
-        Utils.$(`#drawer-${tab.dataset.tab}`).classList.add('active');
+        const target = Utils.$(`#drawer-${tab.dataset.tab}`);
+        if (target) target.classList.add('active');
 
-        if (tab.dataset.tab === 'timeline') Timeline.load(at.id);
+        if (tab.dataset.tab === 'timeline') Timeline.load(at.id, 'timeline');
         if (tab.dataset.tab === 'tarefas') this._loadTarefas(at.id);
+        if (tab.dataset.tab === 'detalhes') this._renderDetails(at);
+        if (tab.dataset.tab === 'interacoes') this._loadInteracoes(at.id);
       };
     });
 
-    // Default tab: details
-    tabs[0].click();
-    this._renderDetails(at);
+    // Default tab: timeline (for omnichannel focus) or detalhes (if in conversas view)
+    const isConversasView = (typeof App !== 'undefined' && App.currentView === 'conversas');
+    const timelineTab = Array.from(tabs).find(t => t.dataset.tab === 'timeline');
+    if (timelineTab) timelineTab.style.display = isConversasView ? 'none' : 'flex';
+
+    const defaultTabName = isConversasView ? 'detalhes' : 'timeline';
+    const defaultTab = Array.from(tabs).find(t => t.dataset.tab === defaultTabName) || tabs[0];
+    defaultTab.click();
   },
 
   _renderDetails(at) {
@@ -176,6 +220,33 @@ const Modal = {
         };
       });
     } catch { container.innerHTML = '<div class="empty-state"><h3>Erro ao carregar tarefas</h3></div>'; }
+  },
+
+  async _loadInteracoes(atId) {
+    const container = Utils.$('#drawer-interacoes');
+    if (!container) return;
+    container.innerHTML = '<div class="empty-state" style="padding:var(--sp-lg)"><p>Carregando logs...</p></div>';
+
+    try {
+      const logs = await API.getInteracoes(atId);
+      if (!logs.length) {
+        container.innerHTML = '<div class="empty-state"><h3>Sem logs</h3></div>';
+        return;
+      }
+      container.innerHTML = `
+        <div class="logs-list" style="padding: var(--sp-lg)">
+          ${logs.map(log => `
+            <div class="log-item" style="display:flex; gap: var(--sp-md); margin-bottom: var(--sp-md); font-size: var(--fs-caption)">
+              <div class="log-time" style="color: var(--text-tertiary); white-space: nowrap">${Utils.formatTime(log.criadoEm)}</div>
+              <div class="log-content">
+                <div class="log-desc" style="color: var(--text-primary); font-weight: var(--fw-medium)">${Utils.escapeHtml(log.descricao)}</div>
+                <div class="log-author" style="color: var(--text-secondary); font-size: 10px">por ${Utils.escapeHtml(log.autor)}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } catch { container.innerHTML = '<div class="empty-state"><h3>Erro ao carregar logs</h3></div>'; }
   },
 
   // ── New Atendimento Modal ──

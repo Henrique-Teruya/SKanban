@@ -85,9 +85,9 @@
 /* ── Filter Bar ── */
 .filter-bar {
   display:flex; align-items:center; gap:var(--sp-sm); padding:var(--sp-sm) var(--sp-lg);
-  border-bottom:1px solid var(--border-subtle); flex-shrink:0; overflow-x:auto;
+  border-bottom:1px solid var(--border-subtle); flex-shrink:0;
+  position:relative; z-index:100;
 }
-.filter-bar::-webkit-scrollbar { display:none; }
 
 /* ── Kanban Board ── */
 .kanban-board {
@@ -163,7 +163,7 @@
 .channel-interno .card-title { color: var(--channel-interno); }
 .channel-posvenda .card-title { color: var(--channel-posvenda); }
 .channel-blip .card-title { color: var(--channel-blip); }
-.card-subtitle { font-size:var(--fs-micro); font-weight:var(--fw-medium); color:var(--text-secondary); margin-bottom:var(--sp-sm); }
+.card-subtitle { font-size: 1.1rem; font-weight:var(--fw-bold); color:var(--text-secondary); margin-bottom:var(--sp-md); line-height: 1.2; }
 
 .card-meta { display:flex; align-items:center; justify-content:space-between; gap:var(--sp-xs); }
 .card-meta-left { display:flex; align-items:center; gap:var(--sp-xs); }
@@ -173,7 +173,7 @@
 .card-footer { margin-top:var(--sp-sm); }
 
 /* ── View Sections (hidden by default) ── */
-.view-section { display:none; flex:1; flex-direction:column; min-height:0; }
+.view-section { display:none; flex:1; flex-direction:column; min-height:0; overflow-y:auto; }
 .view-section.active { display:flex; }
 
 /* ── Login Screen ── */
